@@ -197,9 +197,9 @@ propagationdelay=800 #200ns per hop
 #    python process_data.py dctcp_debug dctcp_rate permutation-144-datamining/trace-${i}.txt.csv dctcp ${linkspeed}
 #done
 
-echo ../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i dcqcn-traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
-../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i dcqcn-traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} > dctcp_debug -endtime ${endtime}
+echo ../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
+../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} > dctcp_debug -endtime ${endtime}
 echo "Parsing the logfile: ../../parse_output dctcp_logfile -dctcp -show > dctcp_rate"
 ../../parse_output dctcp_logfile -dctcp -show > dctcp_rate
-echo "Extracting FCT and Rates: python process_data.py dctcp_debug dctcp_rate dcqcn-traces/$1.dat dctcp ${linkspeed}"
-python process_data.py dctcp_debug dctcp_rate dcqcn-traces/$1.dat dctcp ${linkspeed}
+echo "Extracting FCT and Rates: python process_data.py dctcp_debug dctcp_rate traces/$1.dat dctcp ${linkspeed}"
+python process_data.py dctcp_debug dctcp_rate traces/$1.dat dctcp ${linkspeed}
