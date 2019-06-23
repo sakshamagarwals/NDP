@@ -86,8 +86,8 @@ private:
 
 int main(int argc, char **argv) {
     double endtime = 24*60*60; //in seconds
-    int num_of_flows_to_finish = 1000000;
-    int num_of_flows_to_start = 1000000;
+    int num_of_flows_to_finish = 399000000;
+    int num_of_flows_to_start = 399000000;
     Clock c(timeFromSec(5 / 100.), eventlist);
     int no_of_conns = 0, no_of_nodes = DEFAULT_NODES, cwnd = 15,
 	pktsize=1500, queuesize=8;

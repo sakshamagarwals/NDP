@@ -2,3 +2,4 @@
 htsim*
 sim/libhtsim.a
 sim/parse_output
+*.eps

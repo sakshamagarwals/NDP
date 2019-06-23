@@ -3,6 +3,7 @@
 #include "mtcp.h"
 #include "ecn.h"
 #include <iostream>
+#include <iomanip>
 
 #define KILL_THRESHOLD 5
 ////////////////////////////////////////////////////////////////
@@ -188,7 +189,7 @@ TcpSrc::receivePacket(Packet& pkt)
 	_rto = timeFromMs(1);
 
     if (seqno >= _flow_size){
-        cout << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;	
+        cout << setprecision(9) << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;	
         eventlist().incrementNumOfFlowsFinished();
     }
   
