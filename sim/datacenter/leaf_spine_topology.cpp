@@ -83,7 +83,7 @@ Queue* LeafSpineTopology::alloc_queue(QueueLogger* queueLogger, uint64_t speed, 
 
 void LeafSpineTopology::init_network(){
   QueueLoggerSampling* queueLogger;
-
+  double us_prop = 0.2;
   for (int j=0;j<NUP;j++)
     for (int k=0;k<NLP;k++){
       queues_nup_nlp[j][k] = NULL;
@@ -122,7 +122,7 @@ void LeafSpineTopology::init_network(){
           queues_nlp_ns[j][k]->setName("LP" + ntoa(j) + "->DST" +ntoa(k));
           logfile->writeName(*(queues_nlp_ns[j][k]));
 
-          pipes_nlp_ns[j][k] = new Pipe(timeFromUs(RTT), *eventlist);
+          pipes_nlp_ns[j][k] = new Pipe(timeFromUs(us_prop), *eventlist);
           pipes_nlp_ns[j][k]->setName("Pipe-LP" + ntoa(j)  + "->DST" + ntoa(k));
           logfile->writeName(*(pipes_nlp_ns[j][k]));
 
@@ -141,7 +141,7 @@ void LeafSpineTopology::init_network(){
               new LosslessInputQueue(*eventlist,queues_ns_nlp[k][j]);
           }
 
-          pipes_ns_nlp[k][j] = new Pipe(timeFromUs(RTT), *eventlist);
+          pipes_ns_nlp[k][j] = new Pipe(timeFromUs(us_prop), *eventlist);
           pipes_ns_nlp[k][j]->setName("Pipe-SRC" + ntoa(k) + "->LP" + ntoa(j));
           logfile->writeName(*(pipes_ns_nlp[k][j]));
 
@@ -162,7 +162,7 @@ void LeafSpineTopology::init_network(){
         queues_nup_nlp[k][j]->setName("UP" + ntoa(k) + "->LP_" + ntoa(j));
         logfile->writeName(*(queues_nup_nlp[k][j]));
 
-        pipes_nup_nlp[k][j] = new Pipe(timeFromUs(RTT), *eventlist);
+        pipes_nup_nlp[k][j] = new Pipe(timeFromUs(us_prop), *eventlist);
         pipes_nup_nlp[k][j]->setName("Pipe-UP" + ntoa(k) + "->LP" + ntoa(j));
         logfile->writeName(*(pipes_nup_nlp[k][j]));
 
@@ -183,7 +183,7 @@ void LeafSpineTopology::init_network(){
             new LosslessInputQueue(*eventlist, queues_nup_nlp[k][j]);
         }
 
-        pipes_nlp_nup[j][k] = new Pipe(timeFromUs(RTT), *eventlist);
+        pipes_nlp_nup[j][k] = new Pipe(timeFromUs(us_prop), *eventlist);
         pipes_nlp_nup[j][k]->setName("Pipe-LP" + ntoa(j) + "->UP" + ntoa(k));
         logfile->writeName(*(pipes_nlp_nup[j][k]));
 
