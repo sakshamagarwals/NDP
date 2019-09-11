@@ -16,6 +16,7 @@
 #include "ecnqueue.h"
 
 extern uint32_t RTT;
+double oversubscription_ratio = 1.0;
 
 string ntoa(double n);
 string itoa(uint64_t n);
@@ -158,7 +159,7 @@ void LeafSpineTopology::init_network(){
         // Downlink
         queueLogger = new QueueLoggerSampling(timeFromMs(1000), *eventlist);
         logfile->addLogger(*queueLogger);
-        queues_nup_nlp[k][j] = alloc_queue(queueLogger, (CORE_TO_HOST*HOST_NIC), _queuesize);
+        queues_nup_nlp[k][j] = alloc_queue(queueLogger, (CORE_TO_HOST*HOST_NIC/oversubscription_ratio), _queuesize);
         queues_nup_nlp[k][j]->setName("UP" + ntoa(k) + "->LP_" + ntoa(j));
         logfile->writeName(*(queues_nup_nlp[k][j]));
 
@@ -169,7 +170,7 @@ void LeafSpineTopology::init_network(){
         // Uplink
         queueLogger = new QueueLoggerSampling(timeFromMs(1000), *eventlist);
         logfile->addLogger(*queueLogger);
-        queues_nlp_nup[j][k] = alloc_queue(queueLogger, (CORE_TO_HOST*HOST_NIC), _queuesize);
+        queues_nlp_nup[j][k] = alloc_queue(queueLogger, (CORE_TO_HOST*HOST_NIC/oversubscription_ratio), _queuesize);
         queues_nlp_nup[j][k]->setName("LP" + ntoa(j) + "->UP" + ntoa(k));
         logfile->writeName(*(queues_nlp_nup[j][k]));
 

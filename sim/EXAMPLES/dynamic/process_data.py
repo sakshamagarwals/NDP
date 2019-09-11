@@ -3,7 +3,7 @@ import sys
 fct_filename = sys.argv[1]
 rate_filename = sys.argv[2]
 infilename = sys.argv[3]
-outfilename = sys.argv[3]+"."+sys.argv[4]
+outfilename = sys.argv[3][:-4]+sys.argv[2][10:]+'.dat'+"."+sys.argv[4]
 
 LINK_SPEED = float(sys.argv[5])
 

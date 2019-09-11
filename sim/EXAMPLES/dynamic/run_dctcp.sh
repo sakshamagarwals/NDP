@@ -198,8 +198,8 @@ propagationdelay=800 #200ns per hop
 #done
 
 echo ../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
-../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} > dctcp_debug -endtime ${endtime}
+../../datacenter/htsim_dctcp_dynamic -o dctcp_logfile_$2 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} > dctcp_debug_$2 -endtime ${endtime}
 echo "Parsing the logfile: ../../parse_output dctcp_logfile -dctcp -show > dctcp_rate"
-../../parse_output dctcp_logfile -dctcp -show > dctcp_rate
+../../parse_output dctcp_logfile_$2 -dctcp -show > dctcp_rate_$2
 echo "Extracting FCT and Rates: python process_data.py dctcp_debug dctcp_rate traces/$1.dat dctcp ${linkspeed}"
-python process_data.py dctcp_debug dctcp_rate traces/$1.dat dctcp ${linkspeed}
+python process_data.py dctcp_debug_$2 dctcp_rate_$2 traces/$1.dat dctcp ${linkspeed}
