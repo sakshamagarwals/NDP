@@ -6,9 +6,9 @@ cwnd=35
 queuesize=100
 pktsize=1500
 
-endtime=6.05 #in sec
-flowsfinish=2000000 #stop experiment after these many flows have finished
-flowsstart=2000000 #stop experiment after these many flows have started
+endtime=20.05 #in sec
+flowsfinish=3000000 #stop experiment after these many flows have finished
+flowsstart=3000000 #stop experiment after these many flows have started
 
 shortflowsize=102400 #in bytes
 longflowsize=1000000 #in bytes

@@ -60,3 +60,4 @@ for i in range(NUM_HOSTS):
 np.savetxt(slowdownfile,slowdowns)
 np.savetxt(throughputfile,tputs)
 print "Avg input load: ", sum(inloads)/len(inloads)
+print "Avg util: ", (sum(tputs)/len(tputs))/(sum(inloads)/len(inloads))
