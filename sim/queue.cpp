@@ -4,6 +4,9 @@
 #include "queue.h"
 #include "ndppacket.h"
 #include "queue_lossless.h"
+#include "datacenter/main.h"
+
+std::ofstream src_queue_pause_stats_file;
 
 Queue::Queue(linkspeed_bps bitrate, mem_b maxsize, EventList& eventlist, 
 	     QueueLogger* logger)
@@ -172,12 +175,12 @@ PriorityQueue::receivePacket(Packet& pkt)
 	    else
 		_state_send = LosslessQueue::PAUSED;
 	    
-	    //cout << timeAsMs(eventlist().now()) << " " << _name << " PAUSED "<<endl;
+	    src_queue_pause_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " " << _name << " PAUSED "<< " size " << _queuesize[Q_LO] + _queuesize[Q_MID] + _queuesize[Q_HI] << endl;
 	}
 	else {
 	    //we are allowed to send!
 	    _state_send = LosslessQueue::READY;
-	    //cout << timeAsMs(eventlist().now()) << " " << _name << " GO "<<endl;
+	    src_queue_pause_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " " << _name << " GO "<< " size " << _queuesize[Q_LO] + _queuesize[Q_MID] + _queuesize[Q_HI] << endl;
 
 	    //start transmission if we have packets to send!
 	    if(queuesize()>0)

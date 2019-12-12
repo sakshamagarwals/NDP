@@ -2,6 +2,9 @@
 #define MAIN_H
 
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <set>
 
 
 #define HOST_NIC 40000 // host nic speed in Gbps
@@ -107,5 +110,15 @@
 #define SWITCH_BUFFER 97
 #define RANDOM_BUFFER 3
 #define FEEDER_BUFFER 20
+
+extern std::ofstream cwnd_file;
+extern std::ofstream input_queue_stats_file;
+extern std::ofstream output_queue_stats_file;
+extern std::ofstream src_queue_pause_stats_file;
+extern std::ofstream pause_stats_file;
+extern std::ofstream flow_stats_file;
+
+extern std::set<uint32_t> flows_to_debug;
+extern bool queue_stats_logging;
 
 #endif

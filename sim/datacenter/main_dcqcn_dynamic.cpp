@@ -146,6 +146,36 @@ int main(int argc, char **argv) {
             num_of_flows_to_start = atoi(argv[i+1]);
             cout << "finish after "<< num_of_flows_to_start << " flows have started"<<endl;
             i++;
+	} else if (!strcmp(argv[i],"-cwnd_file")){
+            cwnd_file.open(argv[i+1]);
+            cout << "cwnd_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-input_queue_stats_file")){
+            input_queue_stats_file.open(argv[i+1]);
+            cout << "input_queue_stats_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-output_queue_stats_file")){
+            output_queue_stats_file.open(argv[i+1]);
+            cout << "output_queue_stats_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-src_queue_pause_stats_file")){
+            src_queue_pause_stats_file.open(argv[i+1]);
+            cout << "src_queue_pause_stats_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-pause_stats_file")){
+            pause_stats_file.open(argv[i+1]);
+            cout << "pause_stats_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-flow_stats_file")){
+            flow_stats_file.open(argv[i+1]);
+            cout << "flow_stats_file "<< argv[i+1] << endl;
+            i++;
+	} else if (!strcmp(argv[i],"-flow_to_debug")){
+            flows_to_debug.insert(atoi(argv[i+1]));
+            i++;
+	} else if (!strcmp(argv[i],"-queue_stats_logging")){
+            queue_stats_logging = (atoi(argv[i+1]));
+            i++;
 	} else
 	    exit_error(argv[0]);
 

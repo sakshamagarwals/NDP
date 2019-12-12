@@ -3,7 +3,10 @@
 #include "ecn.h"
 #include "mtcp.h"
 #include "config.h"
+#include <fstream>
+#include "datacenter/main.h"
 
+std::ofstream cwnd_file;
 string ntoa(double n);
 
 
@@ -74,6 +77,7 @@ DCTCPSrc::receivePacket(Packet& pkt)
 
     TcpSrc::receivePacket(pkt);
     //cout << ntoa(timeAsMs(eventlist().now())) << " ATCPID " << str() << " CWND " << _cwnd << " alfa " << ntoa(_alfa)<< endl;
+	cwnd_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " " << str() << " CWND " << _cwnd  << endl;
 }
 
 void 

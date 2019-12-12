@@ -221,7 +221,7 @@ propagationdelay=800 #200ns per hop
 
 
 echo ../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
-../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile_$2 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} > dcqcn_debug_$2 -endtime ${endtime}
+../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile_$2 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -cwnd_file cwnd-$1.txt -input_queue_stats_file input-queue-stats-$1.txt -output_queue_stats_file output-queue-stats-$1.txt -pause_stats_file pause-stats-$1.txt -flow_stats_file flow-stats-$1.txt -src_queue_pause_stats_file src-queue-pause-stats-$1.txt -flow_to_debug $3 -queue_stats_logging $4 > dcqcn_debug_$2 -endtime ${endtime}
 echo "Parsing the logfile: ../../parse_output dcqcn_logfile -dcqcn -show > dcqcn_rate"
 ../../parse_output dcqcn_logfile_$2 -dcqcn -show > dcqcn_rate_$2
 echo "Extracting FCT and Rates: python process_data.py dcqcn_debug dcqcn_rate traces/$1.dat dcqcn ${linkspeed}"

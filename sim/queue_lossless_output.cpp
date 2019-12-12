@@ -4,6 +4,10 @@
 #include <sstream>
 #include "switch.h"
 #include "queue_lossless_output.h"
+#include <fstream>
+#include "datacenter/main.h"
+
+std::ofstream output_queue_stats_file;
 
 LosslessOutputQueue::LosslessOutputQueue(linkspeed_bps bitrate, mem_b maxsize, 
 					 EventList& eventlist, QueueLogger* logger, int ECN, int K)
@@ -77,8 +81,13 @@ LosslessOutputQueue::receivePacket(Packet& pkt,VirtualQueue* prev)
 
     _queuesize += pkt.size();
 
+    if(queue_stats_logging)
+    output_queue_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " ENQ OUTPUTQ " << _name << " size " << _queuesize << endl;
+
+
     if (_queuesize > _maxsize){
 	cout << " Queue " << _name << " LOSSLESS not working! I should have dropped this packet" << endl;
+    assert(false);
     }
 
     if (_logger) 
@@ -111,6 +120,9 @@ void LosslessOutputQueue::completeService(){
 	  pkt->set_flags(pkt->flags() | ECN_CE);    
 
     _queuesize -= pkt->size();
+
+    // output_queue_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " DEQ OUTPUTQ " << _name << " size " << _queuesize << endl;
+
 
     pkt->flow().logTraffic(*pkt, *this, TrafficLogger::PKT_DEPART);
     if (_logger) _logger->logQueue(*this, QueueLogger::PKT_SERVICE, *pkt);

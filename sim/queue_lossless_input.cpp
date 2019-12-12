@@ -4,6 +4,14 @@
 #include <iostream>
 #include <sstream>
 #include "switch.h"
+#include <fstream>
+#include "datacenter/main.h"
+#include "tcp.h"
+#include "tcppacket.h"
+
+std::ofstream input_queue_stats_file;
+std::ofstream pause_stats_file;
+bool queue_stats_logging;
 
 LosslessInputQueue::LosslessInputQueue(EventList& eventlist)
     : Queue(0,Packet::data_packet_size()*20,eventlist,NULL),
@@ -42,11 +50,18 @@ LosslessInputQueue::receivePacket(Packet& pkt)
 {
     /* normal packet, enqueue it */
     _queuesize += pkt.size();
+    if(flows_to_debug.count(pkt.flow().flow_id())){
+		flow_stats_file << setprecision(3) << fixed << "Packet for flow " << pkt.flow().flow_id()  << " at INPQ" << _nodename << " seqno " << ((TcpPacket*)(&pkt))->seqno() << " at " << timeAsUs(eventlist().now()) << " queuesize " << _queuesize << " unpaused " << _state_recv << endl;
+	}
+
+    if(queue_stats_logging)
+    input_queue_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " ENQ INPUTQ " << _nodename << " size " << _queuesize << endl;
 
     //send PAUSE notifications if that is the case!
     if (_queuesize > _high_threshold && _state_recv!=PAUSED){
 	_state_recv = PAUSED;
 	sendPause(1000);
+    pause_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " PAUSE-SENT-BY-INPQ " << _nodename << " size " << _queuesize << endl;
     }
 
     //if (_state_recv==PAUSED)
@@ -54,6 +69,7 @@ LosslessInputQueue::receivePacket(Packet& pkt)
 
     if (_queuesize > _maxsize){
 	cout << " Queue " << _name << " LOSSLESS not working! I should have dropped this packet" << endl;
+    assert(false);
     }
 
     //tell the output queue we're here!
@@ -62,6 +78,8 @@ LosslessInputQueue::receivePacket(Packet& pkt)
 
 void LosslessInputQueue::completedService(Packet& pkt){
     _queuesize -= pkt.size();
+
+    // input_queue_stats_file << setprecision(3) << fixed << timeAsUs(eventlist().now()) << " DEQ INPUTQ " << _nodename << " size " << _queuesize << endl;
 
     //unblock if that is the case
     if (_queuesize < _low_threshold && _state_recv == PAUSED) {

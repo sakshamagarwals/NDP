@@ -4,6 +4,11 @@
 #include "ecn.h"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include "datacenter/main.h"
+
+std::ofstream flow_stats_file;
+std::set<uint32_t> flows_to_debug;
 
 #define KILL_THRESHOLD 5
 ////////////////////////////////////////////////////////////////
@@ -188,8 +193,14 @@ TcpSrc::receivePacket(Packet& pkt)
     if (_rto<timeFromMs(1))
 	_rto = timeFromMs(1);
 
+	if(flows_to_debug.count(pkt.flow().flow_id())){
+		flow_stats_file << setprecision(3) << fixed << "Receive packet at src " << _flow.flow_id() << " " << " seq no: " << seqno << " flow size: " << _flow_size << " at " << timeAsUs(eventlist().now()) << endl;	
+	}
+
     if (seqno >= _flow_size){
         cout << setprecision(9) << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;	
+		if(flows_to_debug.count(pkt.flow().flow_id()))
+        flow_stats_file << setprecision(3) << fixed << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;	
         eventlist().incrementNumOfFlowsFinished();
     }
   
@@ -444,7 +455,6 @@ TcpSrc::send_packets() {
 	if (data_seq>_highest_data_seq)
 	    _highest_data_seq = data_seq;
 
-	//      cout << "Transmit packet on " << _flow.id << " " << _highest_sent+1 << "[" << data_seq << "] packets in flight " << _sent_packets.crt_count << " diff " << (_highest_sent+_mss-_last_acked)/1000 << " last_acked " << _last_acked << " at " << timeAsMs(eventlist().now()) << endl;
 #endif
 
 #ifdef PACKET_SCATTER
@@ -458,12 +468,19 @@ TcpSrc::send_packets() {
 
 	    p = TcpPacket::newpkt(_flow, *(_paths->at(_crt_path)), _highest_sent+1, 
 				  data_seq, _mss);
+	    flow_stats_file << "Transmit packet on " << _flow.id << " " << _highest_sent+1 << "[" << data_seq << "] packets in flight " << _sent_packets.crt_count << " diff " << (_highest_sent+_mss-_last_acked)/1000 << " last_acked " << _last_acked << " at " << timeAsMs(eventlist().now()) << endl;
+		
 	    _crt_path = (_crt_path + 1) % _paths->size();
 	} else {
 	    p  = TcpPacket::newpkt(_flow, *_route, _highest_sent+1, data_seq, _mss);
+	    flow_stats_file << "Transmit packet on " << _flow.id << " " << _highest_sent+1 << "[" << data_seq << "] packets in flight " << _sent_packets.crt_count << " diff " << (_highest_sent+_mss-_last_acked)/1000 << " last_acked " << _last_acked << " at " << timeAsMs(eventlist().now()) << endl;
+
 	}
 #else
 	TcpPacket* p = TcpPacket::newpkt(_flow, *_route, _highest_sent+1, data_seq, _mss);
+	if(flows_to_debug.count(_flow.flow_id())){
+		flow_stats_file << setprecision(3) << fixed << "Transmit packet on " << _flow.flow_id() << " " << _highest_sent+1 << "[" << data_seq << "] diff " << (_highest_sent+_mss-_last_acked)/1000 << " last_acked " << _last_acked << " cwnd " << _cwnd << " at " << timeAsUs(eventlist().now()) << endl;
+	}
 #endif
     p->flow().logTraffic(*p,*this,TrafficLogger::PKT_CREATESEND);
     p->set_ts(eventlist().now());
@@ -647,6 +664,10 @@ TcpSink::receivePacket(Packet& pkt) {
     if (_mSink!=NULL){
 	_mSink->receivePacket(pkt);
     }
+
+	if(flows_to_debug.count(pkt.flow().flow_id())){
+		flow_stats_file << setprecision(3) << fixed << "Receive packet at sink " << pkt.flow().flow_id() << " " << " seq no: " << seqno << " flow size: " << p->size() << " at " << timeAsUs(this->_src->eventlist().now()) << endl;
+	}
 
     int size = p->size(); // TODO: the following code assumes all packets are the same size
     pkt.flow().logTraffic(pkt,*this,TrafficLogger::PKT_RCVDESTROY);
