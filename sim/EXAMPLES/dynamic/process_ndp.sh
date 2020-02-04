@@ -213,15 +213,15 @@ propagationdelay=800 #200ns per hop
 ##permutation-144-DATAMINING
 #for i in 20 40 60 80
 #do
-echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm
-../../datacenter/htsim_ndp_dynamic -o ndp_logfile_$1 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm > ndp_debug_$1
-# cp ndp_debug traces/$1.dat.ndp.debug
-# echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
-# ../../parse_output ndp_logfile_$1 -ndp -show > ndp_rate_$1
-# echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate traces/$1.dat ndp ${linkspeed}"
-# python process_data.py ndp_debug_$1 ndp_rate_$1 traces/$1.dat ndp ${linkspeed}
-# echo "Processing results"
-# ./process_results.sh $1_$1 ndp
+# echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm
+# ../../datacenter/htsim_ndp_dynamic -o ndp_logfile_$1 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm > ndp_debug_$1
+cp ndp_debug traces/$1.dat.ndp.debug
+echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
+../../parse_output ndp_logfile_$1 -ndp -show > ndp_rate_$1
+echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate traces/$1.dat ndp ${linkspeed}"
+python process_data.py ndp_debug_$1 ndp_rate_$1 traces/$1.dat ndp ${linkspeed}
+echo "Processing results"
+./process_results.sh $1_$1 ndp
 #done
 
 # echo ../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
