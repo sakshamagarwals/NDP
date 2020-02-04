@@ -3,7 +3,7 @@ import numpy as np
 
 inputfile = sys.argv[1]
 pktsize = 1500 #int(sys.argv[4]) #in bytes
-propagation_delay_in_ns = 200 #int(sys.argv[5])
+propagation_delay_in_ns = 650 #int(sys.argv[5])
 link_bandwidth = 40 #int(sys.argv[6])
 
 slowdownfile = inputfile + '.slowdown'
@@ -18,8 +18,10 @@ min_start_time_hosts = [1000000.00 for i in range(NUM_HOSTS)]
 max_finish_times_hosts = [-1.0 for i in range(NUM_HOSTS)]
 max_start_times_hosts = [-1.0 for i in range(NUM_HOSTS)]
 
+ctr=0
 with open(inputfile) as f:
     for line in f:
+        ctr+=1
         tokens = line.split(',')
         flowsize = int(tokens[3])
         src = int(tokens[1])
@@ -41,8 +43,9 @@ with open(inputfile) as f:
 	    slowdown = fct/ideal_fct
 	    
             if (slowdown < 1.0):
+                # print("Slowdown: ", slowdown, arrival_time,ctr,src,dst,fct,ideal_fct,flowsize,ideal_data_time,ideal_header_time)
                 slowdown = 1.0
-		assert(false)
+		assert(False)
             slowdowns.append(slowdown)
 
             total_data_hosts[src] += flowsize

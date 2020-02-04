@@ -1,31 +1,31 @@
 #!/bin/bash
 
 no_of_nodes=144
-linkspeed=10
+linkspeed=40
 cwnd=35
-queuesize=12
+queuesize=100
 pktsize=1500
 
-endtime=0.05 #in sec
-flowsfinish=2059200000 #stop experiment after these many flows have finished
-flowsstart=1000000 #stop experiment after these many flows have started
+endtime=20.05 #in sec
+flowsfinish=3000000 #stop experiment after these many flows have finished
+flowsstart=3000000 #stop experiment after these many flows have started
 
-shortflowsize=1 #in bytes
-longflowsize=1 #in bytes
+shortflowsize=102400 #in bytes
+longflowsize=1000000 #in bytes
 
 propagationdelay=800 #200ns per hop
 
 #BAD-CASES
-for i in PERMUTATION DCTCP DCQCN NDP ;
-do
-    echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i bad-cases-ndp/${i}.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm
-    ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i bad-cases-ndp/${i}.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm > ndp_debug
-    cp ndp_debug bad-cases-ndp/${i}.debug
+# for i in PERMUTATION DCTCP DCQCN NDP ;
+# do
+    # echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i bad-cases-ndp/${i}.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm
+    # ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i bad-cases-ndp/${i}.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm > ndp_debug
+    # cp ndp_debug bad-cases-ndp/${i}.debug
     #echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
     #../../parse_output ndp_logfile -ndp -show > ndp_rate
     #echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate incast-144/${i}.dat ndp ${linkspeed}"
     #python process_data.py ndp_debug ndp_rate incast-144/${i}.dat ndp ${linkspeed}
-done
+# done
 
 #for ((i=16;i<=16;i=i+1));
 #do
@@ -213,11 +213,20 @@ done
 ##permutation-144-DATAMINING
 #for i in 20 40 60 80
 #do
-#    echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i permutation-144-datamining/trace-${i}.txt.csv -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm
-#    ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i permutation-144-datamining/trace-${i}.txt.csv -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -numflowsfinish ${flowsfinish} -numflowsstart ${flowsstart} -strat perm > ndp_debug
-#    cp ndp_debug permutation-144-datamining/trace-${i}.txt.csv.ndp.debug
-#    echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
-#    ../../parse_output ndp_logfile -ndp -show > ndp_rate
-#    echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate permutation-144-datamining/trace-${i}.txt.csv ndp ${linkspeed}"
-#    python process_data.py ndp_debug ndp_rate permutation-144-datamining/trace-${i}.txt.csv ndp ${linkspeed}
+echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm
+../../datacenter/htsim_ndp_dynamic -o ndp_logfile_$2 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm > ndp_debug_$2
+# cp ndp_debug traces/$1.dat.ndp.debug
+echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
+../../parse_output ndp_logfile_$2 -ndp -show > ndp_rate_$2
+echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate traces/$1.dat ndp ${linkspeed}"
+python process_data.py ndp_debug_$2 ndp_rate_$2 traces/$1.dat ndp ${linkspeed}
+echo "Processing results"
+./process_results.sh $1_$2 ndp
 #done
+
+# echo ../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime}
+# ../../datacenter/htsim_dcqcn_dynamic -o dcqcn_logfile_$2 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize}  > dcqcn_debug_$2 -endtime ${endtime}
+# echo "Parsing the logfile: ../../parse_output dcqcn_logfile -dcqcn -show > dcqcn_rate"
+# ../../parse_output dcqcn_logfile_$2 -dcqcn -show > dcqcn_rate_$2
+# echo "Extracting FCT and Rates: python process_data.py dcqcn_debug dcqcn_rate traces/$1.dat dcqcn ${linkspeed}"
+# python process_data.py dcqcn_debug_$2 dcqcn_rate_$2 traces/$1.dat dcqcn ${linkspeed}

@@ -3,7 +3,13 @@ import sys
 fct_filename = sys.argv[1]
 rate_filename = sys.argv[2]
 infilename = sys.argv[3]
-outfilename = sys.argv[3][:-4]+sys.argv[2][10:]+'.dat'+"."+sys.argv[4]
+if(sys.argv[4] == 'ndp'):
+    outfilename = sys.argv[3][:-4]+sys.argv[2][8:]+'.dat'+"."+sys.argv[4]
+elif(sys.argv[4] == 'dcqcn'):
+    outfilename = sys.argv[3][:-4]+sys.argv[2][10:]+'.dat'+"."+sys.argv[4]
+else:
+    assert(False)
+print("outfile: ",outfilename)
 
 LINK_SPEED = float(sys.argv[5])
 

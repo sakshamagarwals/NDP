@@ -4,6 +4,7 @@
 #include "ndp.h"
 #include "queue.h"
 #include <stdio.h>
+#include <iomanip>
 
 ////////////////////////////////////////////////////////////////
 //  NDP SOURCE
@@ -421,7 +422,7 @@ void NdpSrc::processAck(const NdpAck& ack) {
     assert(_flight_size>=0);
 
     if (cum_ackno >= _flow_size){
-        cout << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;
+        cout << setprecision(9) << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;
         eventlist().incrementNumOfFlowsFinished();
     }
 

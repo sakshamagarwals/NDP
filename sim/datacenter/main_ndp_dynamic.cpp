@@ -75,8 +75,8 @@ void print_path(std::ofstream &paths,const Route* rt){
 
 int main(int argc, char **argv) {
     double endtime = 24*60*60; //in seconds
-    int num_of_flows_to_finish = 1000000;
-    int num_of_flows_to_start = 1000000;
+    int num_of_flows_to_finish = 399000000;
+    int num_of_flows_to_start = 399000000;
     Clock c(timeFromSec(5 / 100.), eventlist);
     int no_of_conns = 0, cwnd = 5, no_of_nodes = DEFAULT_NODES,
         pktsize=1500, queuesize=8;

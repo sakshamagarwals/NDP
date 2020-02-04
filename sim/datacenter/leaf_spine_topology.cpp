@@ -84,7 +84,7 @@ Queue* LeafSpineTopology::alloc_queue(QueueLogger* queueLogger, uint64_t speed, 
 
 void LeafSpineTopology::init_network(){
   QueueLoggerSampling* queueLogger;
-  double us_prop = 0.2;
+  double us_prop = 0.650;
   for (int j=0;j<NUP;j++)
     for (int k=0;k<NLP;k++){
       queues_nup_nlp[j][k] = NULL;
