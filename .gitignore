@@ -3,3 +3,11 @@ htsim*
 sim/libhtsim.a
 sim/parse_output
 *.eps
+sim/EXAMPLES/dynamic/*.txt
+sim/EXAMPLES/dynamic/*_logfile_*
+sim/EXAMPLES/dynamic/*_rate_*
+sim/EXAMPLES/dynamic/*_debug_*
+*.ipynb
+sim/EXAMPLES/dynamic/*-stats-*
+sim/EXAMPLES/dynamic/traces*
+.vscode/*
