@@ -3,7 +3,7 @@
 no_of_nodes=144
 linkspeed=40
 cwnd=35
-queuesize=100
+queuesize=8
 pktsize=1500
 
 endtime=20.05 #in sec
