@@ -6,7 +6,7 @@ cwnd=35
 queuesize=8
 pktsize=1500
 
-endtime=20.05 #in sec
+endtime=10.05 #in sec
 flowsfinish=3000000 #stop experiment after these many flows have finished
 flowsstart=3000000 #stop experiment after these many flows have started
 
@@ -215,7 +215,7 @@ propagationdelay=800 #200ns per hop
 #do
 # echo ../../datacenter/htsim_ndp_dynamic -o ndp_logfile -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm
 # ../../datacenter/htsim_ndp_dynamic -o ndp_logfile_$1 -i traces/$1.dat -nodes ${no_of_nodes} -cwnd ${cwnd} -pktsize ${pktsize} -queuesize ${queuesize} -endtime ${endtime} -strat perm > ndp_debug_$1
-cp ndp_debug traces/$1.dat.ndp.debug
+# cp ndp_debug traces/$1.dat.ndp.debug
 echo "Parsing the logfile: ../../parse_output ndp_logfile -ndp -show > ndp_rate"
 ../../parse_output ndp_logfile_$1 -ndp -show > ndp_rate_$1
 echo "Extracting FCT and Rates: python process_data.py ndp_debug ndp_rate traces/$1.dat ndp ${linkspeed}"
