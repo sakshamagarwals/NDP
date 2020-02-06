@@ -5,6 +5,7 @@ inputfile = sys.argv[1]
 pktsize = 1500 #int(sys.argv[4]) #in bytes
 propagation_delay_in_ns = 650 #int(sys.argv[5])
 link_bandwidth = 40 #int(sys.argv[6])
+oversubscription_ratio = 4.0
 
 slowdownfile = inputfile + '.slowdown'
 throughputfile = inputfile + '.throughput'
@@ -36,8 +37,8 @@ with open(inputfile) as f:
                 ideal_data_time = ((flowsize*8.0)/link_bandwidth)/1e3 + 1*(((pktsize*8.0)/link_bandwidth)/1e3) + (2 * propagation_delay_in_ns * 1e-3)
 	        ideal_header_time = 2.0 * (8.0 * 40 / link_bandwidth)/1e3 + (2 * propagation_delay_in_ns * 1e-3)
 	    else:
-                ideal_data_time = ((flowsize*8.0)/link_bandwidth)/1e3 + 1*(((pktsize*8.0)/link_bandwidth)/1e3) + 2*(((pktsize*8.0)/(4*link_bandwidth))/1e3) + (4 * propagation_delay_in_ns * 1e-3)
-	        ideal_header_time = 2.0 * (8.0 * 40 / link_bandwidth)/1e3 + 2.0 * (8.0 * 40 / (4 * link_bandwidth))/1e3  + (4 * propagation_delay_in_ns * 1e-3)
+                ideal_data_time = ((flowsize*8.0)/link_bandwidth)/1e3 + 1*(((pktsize*8.0)/link_bandwidth)/1e3) + 2*(((pktsize*8.0)/(4*link_bandwidth/oversubscription_ratio))/1e3) + (4 * propagation_delay_in_ns * 1e-3)
+	        ideal_header_time = 2.0 * (8.0 * 40 / link_bandwidth)/1e3 + 2.0 * (8.0 * 40 / (4 * link_bandwidth/oversubscription_ratio))/1e3  + (4 * propagation_delay_in_ns * 1e-3)
             
             ideal_fct = ideal_header_time + ideal_data_time	    
 	    slowdown = fct/ideal_fct
