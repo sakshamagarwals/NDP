@@ -5,7 +5,7 @@ inputfile = sys.argv[1]
 pktsize = 1500 #int(sys.argv[4]) #in bytes
 propagation_delay_in_ns = 650 #int(sys.argv[5])
 link_bandwidth = 40 #int(sys.argv[6])
-oversubscription_ratio = 4.0
+oversubscription_ratio = 1.0
 
 slowdownfile = inputfile + '.slowdown'
 throughputfile = inputfile + '.throughput'
