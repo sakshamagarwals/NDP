@@ -9,8 +9,10 @@ oversubscription_ratio = 1.0
 
 slowdownfile = inputfile + '.slowdown'
 throughputfile = inputfile + '.throughput'
+slowdown_sizefile = inputfile + '.slowdown_size'
 
 NUM_HOSTS = 144
+flow_sizes = []
 slowdowns = []
 tputs = []
 inloads = []
@@ -47,6 +49,7 @@ with open(inputfile) as f:
                 # print("Slowdown: ", slowdown, arrival_time,ctr,src,dst,fct,ideal_fct,flowsize,ideal_data_time,ideal_header_time)
                 slowdown = 1.0
 		assert(False)
+            flow_sizes.append(flowsize)
             slowdowns.append(slowdown)
 
             total_data_hosts[src] += flowsize
@@ -65,3 +68,10 @@ np.savetxt(slowdownfile,slowdowns)
 np.savetxt(throughputfile,tputs)
 print "Avg input load: ", sum(inloads)/len(inloads)
 print "Avg util: ", (sum(tputs)/len(tputs))/(sum(inloads)/len(inloads))
+
+
+outfile = open(slowdown_sizefile,'w')
+assert(len(slowdowns) == len(flow_sizes))
+for i in range(len(slowdowns)):
+	line_to_write = str(slowdowns[i]) + ' ' + str(flow_sizes[i]/1460)
+	outfile.write(line_to_write + '\n')
